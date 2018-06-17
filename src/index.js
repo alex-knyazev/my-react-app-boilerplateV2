@@ -1,0 +1,1 @@
+imporыt App from "@/App";
