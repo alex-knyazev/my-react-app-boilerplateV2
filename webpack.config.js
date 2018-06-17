@@ -2,14 +2,41 @@ const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const production = process.env.NODE_ENV === "production";
+const chalk = require("chalk");
+
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+const HOST = "0.0.0.0";
+const PORT = process.env.PORT || 3000;
 
 module.exports = {
-  devtool: production ? "" : "cheap-module-eval-source-map",
+  devtool: IS_PRODUCTION ? "" : "cheap-module-eval-source-map",
 
   devServer: {
+    // wull available in LAN
+    host: HOST,
+    // port on host where application runs
+    port: PORT,
+    // browser will open at localhost
+    public: `localhost:${PORT}`,
+    // allow gzip compressing
+    compress: true,
+    // allow to take files from public folder
+    contentBase: path.join(__dirname, "public"),
+    //watch for files at public folder
+    watchContentBase: true,
+    // open info about arror at browser when error
     overlay: {
       errors: true
+    },
+    // hide webpack logs
+    noInfo: true,
+    after(app) {
+      console.log(
+        `To open in browser go to: ` + chalk.blue(`http://localhost:${PORT}/`)
+      );
+      console.log(
+        `Or at local network: ` + chalk.blue(`http://${HOST}:${PORT}/`)
+      );
     }
   },
 
@@ -47,7 +74,9 @@ module.exports = {
         test: /\.scss$/,
         use: [
           {
-            loader: !production ? "style-loader" : MiniCssExtractPlugin.loader
+            loader: !IS_PRODUCTION
+              ? "style-loader"
+              : MiniCssExtractPlugin.loader
           },
           {
             loader: "css-loader",

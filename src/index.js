@@ -1,1 +1,1 @@
-imporыt App from "@/App";
+import App from "@/App";
