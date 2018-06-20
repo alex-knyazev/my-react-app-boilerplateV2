@@ -2,8 +2,10 @@ const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanTerminalPlugin = require('clean-terminal-webpack-plugin');
+const webpack = require('webpack');
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+console.log(IS_PRODUCTION);
 const HOST = '0.0.0.0';
 const PORT = process.env.PORT || 3000;
 
@@ -30,6 +32,7 @@ module.exports = {
     // hide webpack logs
     // noInfo: true,
     stats: 'minimal',
+    hotOnly: true,
   },
 
   module: {
@@ -57,13 +60,13 @@ module.exports = {
         use: [
           {
             loader: 'html-loader',
-            options: { minimize: true },
+            options: { minimize: false },
           },
         ],
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -96,6 +99,8 @@ module.exports = {
   },
 
   plugins: [
+    new webpack.NamedModulesPlugin(),
+    // new webpack.HotModuleReplacementPlugin(),
     new CleanTerminalPlugin({
       message: `dev server is running at http://${HOST}:${PORT}`,
     }),
@@ -110,7 +115,7 @@ module.exports = {
   ],
 
   resolve: {
-    extensions: ['.json', '.js', '.jsx'],
+    extensions: ['.json', '.js', '.jsx', '.css', '.scss'],
     alias: {
       '@': path.resolve(__dirname, 'src/'),
     },
