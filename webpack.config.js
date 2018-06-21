@@ -1,123 +1,31 @@
-const path = require('path');
-const HtmlWebPackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CleanTerminalPlugin = require('clean-terminal-webpack-plugin');
-const webpack = require('webpack');
+const merge = require('webpack-merge');
 
-const IS_PRODUCTION = process.env.NODE_ENV === 'production';
-console.log(IS_PRODUCTION);
-const HOST = '0.0.0.0';
+const { createCommonConfig } = require('./webpackParts/commonConfig');
+const { createDevConfig } = require('./webpackParts/createDevConfig');
+const { createProdConfig } = require('./webpackParts/createProdConfig');
+
+const HOST = process.env.HOST || '0.0.0.0';
 const PORT = process.env.PORT || 3000;
 
-module.exports = {
-  devtool: IS_PRODUCTION ? '' : 'cheap-module-eval-source-map',
+const commonConfig = merge([createCommonConfig()]);
 
-  devServer: {
-    // wull available in LAN
+const prodConfig = merge([createProdConfig()]);
+
+const devConfig = merge([
+  createDevConfig({
+    // Customize host/port here if needed
     host: HOST,
-    // port on host where application runs
     port: PORT,
-    // browser will open at localhost
-    public: `localhost:${PORT}`,
-    // allow gzip compressing
-    compress: true,
-    // allow to take files from public folder
-    contentBase: path.join(__dirname, 'public'),
-    // watch for files at public folder
-    watchContentBase: true,
-    // open info about arror at browser when error
-    overlay: {
-      errors: true,
-    },
-    // hide webpack logs
-    // noInfo: true,
-    stats: 'minimal',
-    hotOnly: true,
-  },
+  }),
+]);
 
-  module: {
-    rules: [
-      {
-        enforce: 'pre',
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'eslint-loader',
-          options: {
-            quiet: true,
-          },
-        },
-      },
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
-      },
-      {
-        test: /\.html$/,
-        use: [
-          {
-            loader: 'html-loader',
-            options: { minimize: false },
-          },
-        ],
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
-        test: /\.(png|jpg|gif|svg)$/,
-        use: [
-          {
-            loader: 'url-loader',
-          },
-        ],
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          {
-            loader: !IS_PRODUCTION ? 'style-loader' : MiniCssExtractPlugin.loader,
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-              modules: true,
-              localIdentName: '[local]--[hash:base64:4]',
-            },
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
-    ],
-  },
+module.exports = (mode) => {
+  let config;
+  if (mode === 'production') {
+    config = merge(commonConfig, prodConfig, { mode });
+  } else {
+    config = merge(commonConfig, devConfig, { mode });
+  }
 
-  plugins: [
-    new webpack.NamedModulesPlugin(),
-    // new webpack.HotModuleReplacementPlugin(),
-    new CleanTerminalPlugin({
-      message: `dev server is running at http://${HOST}:${PORT}`,
-    }),
-    new HtmlWebPackPlugin({
-      template: './src/public/index.html',
-      filename: './index.html',
-    }),
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].css',
-    }),
-  ],
-
-  resolve: {
-    extensions: ['.json', '.js', '.jsx', '.css', '.scss'],
-    alias: {
-      '@': path.resolve(__dirname, 'src/'),
-    },
-  },
+  return config;
 };
