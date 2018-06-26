@@ -2,7 +2,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "com-s/*": ["./src/components/specific/*"],
+      "com-c/*": ["./src/components/common/*"],
+      "cont-s/*": ["./src/containers/specific/*"],
+      "cont-c/*": ["./src/containers/common/*"]
     }
   }
 }
