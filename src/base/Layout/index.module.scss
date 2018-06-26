@@ -1,0 +1,18 @@
+.layout {
+  display: grid;
+
+  height: 100vh;
+
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "header"
+    "main";
+}
+
+.header {
+  grid-area: header;
+}
+
+.main {
+  grid-area: main;
+}

@@ -20,6 +20,10 @@ const createCommonConfig = () => ({
     extensions: ['.json', '.js', '.jsx', '.css', '.scss'],
     alias: {
       '@': path.resolve(__dirname, '../src/'),
+      'com-c': path.resolve(__dirname, '../src/components/common/'),
+      'com-s': path.resolve(__dirname, '../src/components/specific/'),
+      'cont-s': path.resolve(__dirname, '../src/containers/specific/'),
+      'cont-c': path.resolve(__dirname, '../src/containers/common/'),
     },
   },
 
