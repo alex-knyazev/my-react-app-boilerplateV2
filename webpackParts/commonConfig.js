@@ -37,6 +37,7 @@ const createCommonConfig = () => ({
           loader: 'eslint-loader',
           options: {
             quiet: true,
+            emitWarning: true, // in browser erros will like warnings
           },
         },
       },

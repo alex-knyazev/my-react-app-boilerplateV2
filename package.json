@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --env development --hot",
+    "start": "nodemon --watch webpack.config.js --watch ./webpackParts --exec \"webpack-dev-server --hot --env development\"",
     "build": "webpack --env production"
   },
   "keywords": [],
@@ -34,7 +34,6 @@
     "babel-preset-stage-2": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",
     "chalk": "^2.4.1",
-    "clean-terminal-webpack-plugin": "^1.0.1",
     "css-loader": "^0.28.11",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
@@ -44,6 +43,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.9.1",
     "file-loader": "^1.1.11",
+    "friendly-errors-webpack-plugin": "^1.7.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.4.0",

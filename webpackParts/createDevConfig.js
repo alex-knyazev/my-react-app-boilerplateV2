@@ -1,6 +1,6 @@
 const path = require('path');
-const CleanTerminalPlugin = require('clean-terminal-webpack-plugin');
 const webpack = require('webpack');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 exports.createDevConfig = ({ host, port } = {}) => ({
   devtool: 'source-map',
@@ -60,9 +60,14 @@ exports.createDevConfig = ({ host, port } = {}) => ({
   plugins: [
     // will cause the relative path of the module to be displayed when HMR is enabled.
     new webpack.NamedModulesPlugin(),
-    // clear terminal after every rebuild
-    new CleanTerminalPlugin({
-      message: `dev server is running at http://${host}:${port}`,
+    new FriendlyErrorsWebpackPlugin({
+      compilationSuccessInfo: {
+        messages: [`You application is running here http://${host}:${port}`],
+      },
     }),
+    // clear terminal after every rebuild
+    // new CleanTerminalPlugin({
+    //   message: `dev server is running at http://${host}:${port}`,
+    // }),
   ],
 });
